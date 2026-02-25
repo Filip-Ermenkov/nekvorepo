@@ -1,0 +1,22 @@
+# Set default behavior to automatically handle text files
+* text=auto
+
+# Force LF for all code and configuration files
+*.md text eol=lf
+*.json text eol=lf
+*.js text eol=lf
+*.mjs text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.css text eol=lf
+*.gitignore text eol=lf
+
+# Ensure lockfiles always use LF to prevent merge conflicts
+package-lock.json text eol=lf
+
+# Denote binary files (images, etc.) so Git doesn't touch their endings
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
