@@ -42,9 +42,9 @@ resource "aws_cognito_user_pool" "pool" {
   # PROD: mfa_configuration = "OPTIONAL"
   mfa_configuration = "OFF"
 
-  software_token_mfa_configuration {
-    enabled = true
-  }
+  # software_token_mfa_configuration {
+  #   enabled = true
+  # }
 }
 
 resource "aws_cognito_user_pool_client" "client" {
