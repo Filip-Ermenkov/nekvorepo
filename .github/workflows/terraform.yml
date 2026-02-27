@@ -26,7 +26,7 @@ env:
   AWS_REGION: "us-east-1"
 
 jobs:
-  terraform:
+  terraform-plan:
     name: 'Terraform'
     runs-on: ubuntu-latest
 
@@ -62,15 +62,48 @@ jobs:
       id: plan
       run: terraform plan -input=false -no-color -out=tfplan
 
-    - name: Terraform Plan Status
-      if: steps.plan.outcome == 'failure'
-      run: exit 1
+    - name: Upload Plan Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: tfplan
+        path: terraform/tfplan
 
-    - name: Terraform Apply
-      if: github.event_name == 'workflow_dispatch' && inputs.action == 'apply'
-      run: terraform apply -auto-approve tfplan
+  terraform-execute:
+    name: 'Terraform Execute'
+    runs-on: ubuntu-latest
 
-    - name: Terraform Destroy
-      if: github.event_name == 'workflow_dispatch' && inputs.action == 'destroy'
-      run: terraform destroy -auto-approve
+    needs: terraform-plan
+
+    if: github.event_name == 'workflow_dispatch' && inputs.action != 'plan'
+    
+    environment: production 
+
+    defaults:
+      run:
+        working-directory: ./terraform
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::064057453791:role/GitHubActions-OIDC-Role
+          aws-region: ${{ env.AWS_REGION }}
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.14.6"
+
+      - run: terraform init
+
+      - name: Download Plan Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+          path: terraform/
+
+      - name: Terraform Apply
+        if: inputs.action == 'apply'
+        run: terraform apply -auto-approve tfplan
+
+      - name: Terraform Destroy
+        if: inputs.action == 'destroy'
+        run: terraform destroy -auto-approve
 
