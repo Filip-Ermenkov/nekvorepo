@@ -17,6 +17,12 @@ module "vpc" {
   # PROD: database_subnets = ["10.0.20.0/24", "10.0.21.0/24", "10.0.22.0/24"]
   database_subnets = ["10.0.20.0/24", "10.0.21.0/24", "10.0.22.0/24"]
 
+  # 1. This creates a separate route table for the DB subnets
+  create_database_subnet_route_table = true
+
+  # 2. This adds the 0.0.0.0/0 -> Internet Gateway route to that table
+  create_database_internet_gateway_route = true
+
   create_database_subnet_group = true
   enable_dns_hostnames         = true
   enable_dns_support           = true
