@@ -9,14 +9,14 @@ resource "aws_secretsmanager_secret_version" "db_pass_val" {
 }
 
 resource "aws_db_instance" "postgres" {
-  identifier            = "${var.project_name}-db"
-  engine                = "postgres"
-  engine_version        = "15.4"
+  identifier     = "${var.project_name}-db"
+  engine         = "postgres"
+  engine_version = "15.4"
 
   # DEV: t4g.micro is Free Tier eligible. 
   # PROD: instance_class = "db.t4g.small"
-  instance_class        = "db.t4g.micro"
-  
+  instance_class = "db.t4g.micro"
+
   allocated_storage     = 20
   max_allocated_storage = 100 # Storage autoscaling
 
@@ -35,9 +35,9 @@ resource "aws_db_instance" "postgres" {
 
   # DEV: false (Single-AZ is much cheaper)
   # PROD: multi_az = true
-  multi_az            = false
-  
-  storage_encrypted   = true
+  multi_az = false
+
+  storage_encrypted = true
 
   # DEV: false for easy "terraform destroy". 
   # PROD: deletion_protection = true
@@ -45,7 +45,7 @@ resource "aws_db_instance" "postgres" {
   skip_final_snapshot = true # DEV: true to save time/cost on destroy
 
   final_snapshot_identifier = "${var.project_name}-final-snapshot"
-  
+
   # DEV: Disable to save on storage and processing
   # PROD: performance_insights_enabled = true
   performance_insights_enabled = false

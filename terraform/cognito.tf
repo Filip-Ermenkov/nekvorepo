@@ -41,7 +41,7 @@ resource "aws_cognito_user_pool" "pool" {
   # DEV: "OFF" (Saves you from getting SMS charges if you don't have SES set up)
   # PROD: mfa_configuration = "OPTIONAL"
   mfa_configuration = "OFF"
-  
+
   software_token_mfa_configuration {
     enabled = true
   }
