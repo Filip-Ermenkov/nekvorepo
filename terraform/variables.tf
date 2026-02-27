@@ -13,12 +13,8 @@ variable "db_password" {
   sensitive = true
 }
 
-variable "my_ip" {
-  type        = string
-  description = "Your local public IP"
-}
-
-variable "ssh_key_name" {
-  type        = string
-  description = "The name of the SSH key pair created in the AWS console"
+variable "allowed_ips" {
+  type        = list(string)
+  description = "List of developer IPs"
+  default     = []
 }
