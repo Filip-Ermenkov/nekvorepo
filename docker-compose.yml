@@ -1,0 +1,25 @@
+services:
+  identity-service:
+    build:
+      context: .
+      dockerfile: services/identity-service/Dockerfile
+    container_name: identity-service
+    ports:
+      - "8001:8000"
+    env_file:
+      - .env
+    volumes:
+      - efs_drafts:/mnt/efs/drafts
+    networks:
+      - chrono_network
+    restart: always
+    environment:
+      - PYTHONPATH=/app
+
+networks:
+  chrono_network:
+    driver: bridge
+
+volumes:
+  efs_drafts:
+    driver: local
